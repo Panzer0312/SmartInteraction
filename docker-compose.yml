@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  face-detection:
+    build: ./model-deepFace
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [ gpu ]
+
+  face-detection-EmoAffectNet:
+    build: ./model-affectNet
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [ gpu ]
+
+  aggregator:
+    build: ./aggregator
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest

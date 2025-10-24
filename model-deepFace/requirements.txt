@@ -1,0 +1,8 @@
+deepface
+flask
+opencv-python-headless
+tensorflow
+torch
+torchvision
+numpy
+tf-keras
