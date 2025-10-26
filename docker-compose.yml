@@ -1,29 +1,29 @@
-version: "3.9"
+version: '3.8'
+
 services:
-  face-detection:
+  ai-deepface:
     build: ./model-deepFace
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [ gpu ]
-
-  face-detection-EmoAffectNet:
-    build: ./model-affectNet
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [ gpu ]
-
-  aggregator:
-    build: ./aggregator
-    ports:
-      - "8000:8000"
+    container_name: model-deepface
     environment:
-      - REDIS_HOST=redis
+      - VIDEO_URL=http://host.docker.internal:8080/video_feed
+      - DATA_ENDPOINT=http://data-collector:5000/data
+    ports:
+      - "8090:8090"
     depends_on:
-      - redis
+      - data-collector
+    networks:
+      - ai-network
+    restart: always
 
-  redis:
-    image: redis:latest
+  data-collector:
+    build: ./data_collector
+    container_name: data-collector
+    ports:
+      - "5000:5000"
+    networks:
+      - ai-network
+    restart: always
+
+networks:
+  ai-network:
+    driver: bridge

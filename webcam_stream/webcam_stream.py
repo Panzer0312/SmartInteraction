@@ -1,11 +1,9 @@
 # webcam_stream.py
 import cv2
-import imageio
-import threading
 from flask import Flask, Response
 
 app = Flask(__name__)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 def generate_frames():
     while True:
@@ -19,5 +17,12 @@ def generate_frames():
 def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/')
+def index():
+    return '<h1>Webcam Stream läuft!</h1><p><a href="/video_feed">Video anzeigen</a></p>'
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    try:
+        app.run(host="0.0.0.0", port=8080, threaded=True)
+    finally:
+        cap.release()

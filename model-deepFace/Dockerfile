@@ -13,7 +13,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source
-COPY . .
+COPY model-deepFace.py .
 
 # Expose no ports (this service just runs inference)
-CMD ["python", "app.py"]
+EXPOSE 8090
+CMD ["python", "model-deepFace.py"]
