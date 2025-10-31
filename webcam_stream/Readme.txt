@@ -1,1 +1,0 @@
-Run this on the normal host machine in order to expose the webcam stream to the ai-models
